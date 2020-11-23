@@ -13,7 +13,6 @@ exports.cookieCreate = async (req, res) => {
 
 exports.cookieList = async (req, res) => {
     try {
-        console.log(req.body);
         let attributes = req.body.attributes ? req.body.attributes : [];
         let exclude = req.body.exclude ? req.body.exclude : [];
         const cookies = await Cookie.findAll({attributes});
@@ -23,31 +22,48 @@ exports.cookieList = async (req, res) => {
     }  
 }
 
-exports.cookieDetail = (req, res) => {
-    const cookieID = req.params.id;
-    const myCake = cookies.find(cake => cake.id === cookieID);
-    res.status(200).json(cake);
-}
-
-exports.cookieUpdate = (req, res) => {
-    const cookieID = req.params.id;
-    const foundCookie = cookies.find(cookie => cookie.id === +cookieID);
-    
-    if (foundCookie){
-        for (let key in req.body) foundCookie[key] = req.body[key];
-        res.status(200).json(foundCookie);
-    } else {
-        res.status(404).json({msg: "Cookie not found"});   
+exports.cookieDetail = async (req, res) => {
+    const { id:cookieID } = req.params;
+    try {
+        const foundCookie = await Cookie.findByPk(cookieID);
+        if(foundCookie){
+            res.status(200).json(foundCookie);
+        } else {
+            res.status(404).json({message: "Cookie not found"});
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 }
 
-exports.cookieDelete = (req, res) => {
-    const cookieID = req.params.id;
-    const foundCookie = cookies.find(cookie => cookie.id === +cookieID);
-    if (foundCookie){
-        cookies = cookies.filter(cookie => cookie.id !== +cookieID);
-        res.status(204).end();
-    } else {
-        res.status(404).json({msg: 'Cookie not found'});
+exports.cookieUpdate = async (req, res) => {
+    const { id:cookieID } = req.params;
+
+    try {
+        const foundCookie = await Cookie.findByPk(cookieID);
+        if(foundCookie){
+            await foundCookie.update(req.body);
+            res.status(200).json(foundCookie);
+        } else {
+            res.status(404).json({message: "Cookie not found"});
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
+exports.cookieDelete = async (req, res) => {
+    const { id:cookieID } = req.params;
+
+    try {
+        const foundCookie = await Cookie.findByPk(cookieID);
+        if(foundCookie){
+            await foundCookie.destroy();
+            res.status(204).end();
+        } else {
+            res.status(404).json({message: "Cookie not found"});
+        }
+    } catch (error) {
+        res.status(500).json({message: error.message});
     }
 }
