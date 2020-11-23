@@ -13,7 +13,7 @@ const PORT = 8000;
 
 const run = async () => {
     try {
-        await db.sequelize.sync();
+        await db.sequelize.sync({alter: true});
         console.log("Connection to the database successful!");
     } catch (error) {
         console.error("Error connecting to the database: ", error);

@@ -1,17 +1,26 @@
-const slugify = require('slugify')
-let cookies = require('../cookies')
+const slugify = require('slugify');
+const { Cookie } = require('../db/models');
 
-exports.cookieCreate = (req, res) => {
-    const id = cookies[cookies.length - 1].id + 1;
-    const slug = slugify(req.body.name, {lower: true});
-    const newCookie = { id, slug, ...req.body };
 
-    cookies.push(newCookie);
-    res.status(201).json(newCookie);
+exports.cookieCreate = async (req, res) => {
+    try {
+        const newCookie = await Cookie.create(req.body);
+        res.status(201).json(newCookie);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
 }
 
-exports.cookieList = (req, res) => {
-    res.status(200).json(cookies)
+exports.cookieList = async (req, res) => {
+    try {
+        console.log(req.body);
+        let attributes = req.body.attributes ? req.body.attributes : [];
+        let exclude = req.body.exclude ? req.body.exclude : [];
+        const cookies = await Cookie.findAll({attributes});
+        res.status(200).json(cookies);
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }  
 }
 
 exports.cookieDetail = (req, res) => {
