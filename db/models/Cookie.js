@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         image: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         slug: {
             type: DataTypes.STRING,

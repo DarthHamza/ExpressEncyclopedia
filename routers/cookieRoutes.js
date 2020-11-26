@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const upload = require('../middleware/multer');
 const {
     cookieCreate,
     cookieList,
@@ -10,8 +11,8 @@ const {
 } = require('../controllers/cookieController')
 
 
-router.param("id", async (req, res, next, id) => {
-    const cookie = await fetchCookie(id, next);
+router.param("cookieID", async (req, res, next, cookieID) => {
+    const cookie = await fetchCookie(cookieID, next);
     if(cookie){
         req.cookie = cookie;
         next();
@@ -22,14 +23,14 @@ router.param("id", async (req, res, next, id) => {
     }
 });
 
-router.post("/",cookieCreate);
+router.post("/", upload.single('image'), cookieCreate);
 
 router.get("/", cookieList);
 
-router.get("/:id", cookieDetail);
+router.get("/:cookieID",  cookieDetail);
 
-router.put("/:id", cookieUpdate);
+router.put("/:cookieID", upload.single('image'), cookieUpdate);
 
-router.delete("/:id", cookieDelete);
+router.delete("/:cookieID", cookieDelete);
 
 module.exports = router;

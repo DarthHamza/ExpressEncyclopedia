@@ -4,6 +4,9 @@ const { Cookie } = require('../db/models');
 
 exports.cookieCreate = async (req, res, next) => {
     try {
+        if (req.file) {
+            req.body.image = `${req.protocol}://${req.get('host')}/media/${req.file.filename}`;
+        }
         const newCookie = await Cookie.create(req.body);
         res.status(201).json(newCookie);
     } catch (error) {
@@ -41,6 +44,9 @@ exports.cookieDetail = async (req, res, next) => {
 
 exports.cookieUpdate = async (req, res, next) => {
     try {
+        if (req.file) {
+            req.body.image = `${req.protocol}://${req.get('host')}/media/${req.file.filename}`;
+        }
         await req.cookie.update(req.body);
         res.status(200).json(req.cookie);
     } catch(error) {
