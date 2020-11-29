@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/multer');
 const {
-    cookieCreate,
     cookieList,
     cookieDetail,
     cookieUpdate,
@@ -22,8 +21,6 @@ router.param("cookieID", async (req, res, next, cookieID) => {
         next(err);
     }
 });
-
-router.post("/", upload.single('image'), cookieCreate);
 
 router.get("/", cookieList);
 

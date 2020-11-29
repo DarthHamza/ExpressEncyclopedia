@@ -34,4 +34,8 @@ Object.keys(db).forEach(modelName => {
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
+db.Bakery.hasMany(db.Cookie, {
+  foreignKey: { fieldName: "bakeryId", allowNull: false},
+})
+
 module.exports = db;

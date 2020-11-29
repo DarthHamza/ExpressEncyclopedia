@@ -3,6 +3,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const cookieRoutes = require('./routers/cookieRoutes')
+const bakeryRoutes = require('./routers/bakeryRoutes')
 const db = require('./db/models')
 const app = express();
 const PORT = 8000;
@@ -11,7 +12,9 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Middlewares that run before anything go here
+
 app.use('/cookies', cookieRoutes);
+app.use('/bakeries', bakeryRoutes);
 app.use('/media', express.static(path.join(__dirname, "media")));
 
 const run = async () => {

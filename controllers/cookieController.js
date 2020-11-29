@@ -1,19 +1,6 @@
 const slugify = require('slugify');
 const { Cookie } = require('../db/models');
 
-
-exports.cookieCreate = async (req, res, next) => {
-    try {
-        if (req.file) {
-            req.body.image = `${req.protocol}://${req.get('host')}/media/${req.file.filename}`;
-        }
-        const newCookie = await Cookie.create(req.body);
-        res.status(201).json(newCookie);
-    } catch (error) {
-        next(error);
-    }
-}
-
 exports.cookieList = async (req, res, next) => {
     try {
         let attributes = req.body.attributes ? req.body.attributes : [];
