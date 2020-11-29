@@ -16,7 +16,16 @@ exports.bakeryCreate = async (req, res, next) => {
 exports.bakeryList = async (req, res, next) => {
     try {
         let attributes = req.body.attributes ? req.body.attributes : [];
-        const bakeries = await Bakery.findAll({attributes});
+        const bakeries = await Bakery.findAll({
+            attributes: ["id", "name"],
+            include: [
+                {
+                    model: Cookie,
+                    as: "cookies",
+                    attributes: {exclude: ['createdAt', 'updatedAt', 'bakeryId'] },
+                },
+            ],
+        });
         res.status(200).json(bakeries);
     } catch (error) {
         next(error);
@@ -24,9 +33,9 @@ exports.bakeryList = async (req, res, next) => {
 }
 
 
-exports.fetchBakery = async (bakeryID, next) => {
+exports.fetchBakery = async (bakeryId, next) => {
     try{
-        const bakery = await Bakery.findByPk(bakeryID);
+        const bakery = await Bakery.findByPk(bakeryId);
         return bakery;
     } catch (error){
         next(error);
@@ -67,7 +76,9 @@ exports.cookieCreate = async (req, res, next) => {
         if (req.file) {
             req.body.image = `${req.protocol}://${req.get('host')}/media/${req.file.filename}`;
         }
+        console.log(req.bakery.id);
         req.body.bakeryId = req.bakery.id;
+        console.log(req.body);
         const newCookie = await Cookie.create(req.body);
         res.status(201).json(newCookie);
     } catch (error) {

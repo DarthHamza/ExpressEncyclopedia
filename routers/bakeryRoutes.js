@@ -12,8 +12,8 @@ const {
 } = require('../controllers/bakeryController')
 
 
-router.param("bakeryID", async (req, res, next, bakeryID) => {
-    const bakery = await fetchBakery(bakeryID, next);
+router.param("bakeryId", async (req, res, next, bakeryId) => {
+    const bakery = await fetchBakery(bakeryId, next);
     if(bakery){
         req.bakery = bakery;
         next();
@@ -24,16 +24,16 @@ router.param("bakeryID", async (req, res, next, bakeryID) => {
     }
 });
 
-router.post("/bakeries/bakeryId/cookies", upload.single('image'), cookieCreate);
+router.post("/:bakeryId/cookies", upload.single('image'), cookieCreate);
 
 router.post("/", upload.single('image'), bakeryCreate);
 
 router.get("/", bakeryList);
 
-router.get("/:bakeryID",  bakeryDetail);
+router.get("/:bakeryId",  bakeryDetail);
 
-router.put("/:bakeryID", upload.single('image'), bakeryUpdate);
+router.put("/:bakeryId", upload.single('image'), bakeryUpdate);
 
-router.delete("/:bakeryID", bakeryDelete);
+router.delete("/:bakeryId", bakeryDelete);
 
 module.exports = router;

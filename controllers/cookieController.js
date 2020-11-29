@@ -1,10 +1,17 @@
 const slugify = require('slugify');
-const { Cookie } = require('../db/models');
+const { Cookie, Bakery } = require('../db/models');
 
 exports.cookieList = async (req, res, next) => {
     try {
-        let attributes = req.body.attributes ? req.body.attributes : [];
-        const cookies = await Cookie.findAll({attributes});
+        // let attributes = req.body.attributes ? req.body.attributes : [];
+        const cookies = await Cookie.findAll({
+            attributes: { exclude: ['createdAt', 'updatedAt', 'bakeryId',]},
+            include: {
+                model: Bakery,
+                as: 'bakery',
+                attributes: ['name']
+            }
+        });
         res.status(200).json(cookies);
     } catch (error) {
         next(error);

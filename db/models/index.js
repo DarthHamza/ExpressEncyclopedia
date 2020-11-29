@@ -35,7 +35,9 @@ db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 db.Bakery.hasMany(db.Cookie, {
+  as: "cookies",
   foreignKey: { fieldName: "bakeryId", allowNull: false},
 })
+db.Cookie.belongsTo(db.Bakery, { as: 'bakery' });
 
 module.exports = db;
