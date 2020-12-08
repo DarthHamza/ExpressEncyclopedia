@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const upload = require('../middleware/multer');
+const passport = require('passport');
 const {
     bakeryCreate,
     bakeryList,
@@ -26,7 +27,12 @@ router.param("bakeryId", async (req, res, next, bakeryId) => {
 
 router.post("/:bakeryId/cookies", upload.single('image'), cookieCreate);
 
-router.post("/", upload.single('image'), bakeryCreate);
+router.post(
+    "/",
+    passport.authenticate('jwt', {session: false}),
+    upload.single('image'),
+    bakeryCreate
+);
 
 router.get("/", bakeryList);
 

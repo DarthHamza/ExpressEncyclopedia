@@ -6,7 +6,7 @@ const passport = require('passport');
 const cookieRoutes = require('./routers/cookieRoutes')
 const bakeryRoutes = require('./routers/bakeryRoutes')
 const userRoutes = require('./routers/userRoutes')
-const { localStrategy } = require('./middleware/passport');
+const { localStrategy, jwtStrategy } = require('./middleware/passport');
 const db = require('./db/models')
 const app = express();
 const PORT = 8000;
@@ -15,6 +15,7 @@ app.use(cors());
 app.use(bodyParser.json());
 app.use(passport.initialize());
 passport.use(localStrategy);
+passport.use(jwtStrategy);
 // Middlewares that run before anything go here
 
 app.use(userRoutes);
