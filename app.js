@@ -9,7 +9,7 @@ const userRoutes = require('./routers/userRoutes')
 const { localStrategy, jwtStrategy } = require('./middleware/passport');
 const db = require('./db/models')
 const app = express();
-const PORT = 8000;
+const PORT = 8080;
 
 app.use(cors());
 app.use(bodyParser.json());
