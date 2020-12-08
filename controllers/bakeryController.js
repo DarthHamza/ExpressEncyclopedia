@@ -3,9 +3,18 @@ const { Bakery, Cookie } = require('../db/models');
 
 exports.bakeryCreate = async (req, res, next) => {
     try {
+        const foundBakery = await Bakery.findOne({
+            where: {userId: req.user.id }
+        });
+        if (foundBakery){
+            const err = new Error("You already have a bakery");
+            err.status = 400;
+            next(err);
+        }
         if (req.file) {
             req.body.image = `${req.protocol}://${req.get('host')}/media/${req.file.filename}`;
         }
+        req.body.userId = req.user.id;
         const newBakery = await Bakery.create(req.body);
         res.status(201).json(newBakery);
     } catch (error) {
