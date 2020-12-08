@@ -82,14 +82,18 @@ exports.bakeryDelete = async (req, res, next) => {
 
 exports.cookieCreate = async (req, res, next) => {
     try {
-        if (req.file) {
-            req.body.image = `${req.protocol}://${req.get('host')}/media/${req.file.filename}`;
-        }
-        console.log(req.bakery.id);
-        req.body.bakeryId = req.bakery.id;
-        console.log(req.body);
-        const newCookie = await Cookie.create(req.body);
-        res.status(201).json(newCookie);
+        if (req.user.id === req.bakery.userId) {
+            if (req.file) {
+              req.body.image = `http://${req.get("host")}/media/${req.file.filename}`;
+            }
+            req.body.bakeryId = req.bakery.id;
+            const newCookie = await Cookie.create(req.body);
+            res.status(201).json(newCookie);
+          } else {
+            const err = new Error("Unauthorized");
+            err.status = 401;
+            next(err);
+          }
     } catch (error) {
         next(error);
     }

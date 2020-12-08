@@ -25,7 +25,12 @@ router.param("bakeryId", async (req, res, next, bakeryId) => {
     }
 });
 
-router.post("/:bakeryId/cookies", upload.single('image'), cookieCreate);
+router.post(
+    "/:bakeryId/cookies",
+    passport.authenticate('jwt', {session: false}),
+    upload.single('image'),
+    cookieCreate
+);
 
 router.post(
     "/",
