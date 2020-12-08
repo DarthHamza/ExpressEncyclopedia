@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const passport = require('passport');
 const upload = require('../middleware/multer');
 const {
     cookieList,
@@ -26,8 +27,17 @@ router.get("/", cookieList);
 
 router.get("/:cookieID",  cookieDetail);
 
-router.put("/:cookieID", upload.single('image'), cookieUpdate);
+router.put(
+    "/:cookieID",
+    passport.authenticate('jwt', {session: false}),
+    upload.single('image'),
+    cookieUpdate
+);
 
-router.delete("/:cookieID", cookieDelete);
+router.delete(
+    "/:cookieID",
+    passport.authenticate('jwt', {session: false}),
+    cookieDelete
+);
 
 module.exports = router;
